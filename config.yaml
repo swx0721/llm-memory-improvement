@@ -12,6 +12,7 @@ faiss:
 
 storage:
   sqlite_path: ./cache/meta.sqlite
+  history_db_path: ./cache/conversation_history.db
 
 
 retrieval:
