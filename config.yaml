@@ -1,7 +1,7 @@
 storage:
-  history_db_path: ../data/conversation_history.db
+  history_db_path: "D:\\HP\\OneDrive\\Desktop\\学校\\课程\\专业课\\自然语言\\llm-memory-improvement\\data\\conversation_history.db"
 
 llm:
   model: "Pro/Qwen/Qwen2-7B-Instruct"
   base_url: "https://api.siliconflow.cn/v1/chat/completions"
-  api_key: sk-bhbgvzuyrhcnmqzobtjdrahvdijaaorhqqomqlslsllpynpj
+  api_key: "sk-bhbgvzuyrhcnmqzobtjdrahvdijaaorhqqomqlslsllpynpj"
