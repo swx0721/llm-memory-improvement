@@ -1,5 +1,5 @@
 storage:
-  history_db_path: ./data/conversation_history.db
+  history_db_path: ../data/conversation_history.db
 
 llm:
   model: "Pro/Qwen/Qwen2-7B-Instruct"

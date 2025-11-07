@@ -1,9 +1,9 @@
 from src.llm_client import ApiLLMClient
-from src.prompts import build_prompt
+from src.prompts import build_prompt, get_evidence
 from src.history_store import HistoryStore
 import yaml
 
-CFG_PATH = "config.yaml"
+CFG_PATH = r"D:\HP\OneDrive\Desktop\学校\课程\专业课\自然语言\llm-memory-improvement\config.yaml"
 
 
 def bootstrap():
@@ -24,16 +24,50 @@ def bootstrap():
 
     return cfg, llm, history_store
 
-
-def chat_loop(cfg, llm, history_store):
-    """连续对话循环，支持历史检索"""
+def chat_first_turn(cfg, llm, history_store):
+    """首次对话流程"""
     print("\n=== 开始对话 (输入 'quit' 或 'exit' 退出) ===\n")
 
     # 开始新的会话
     session_id = history_store.start_session()
     print(f"会话ID: {session_id}")
-    turn_number = 0
+    turn_number = 1
 
+    # 获取用户输入
+    user_input = input("用户: ").strip()
+
+    if user_input.lower() in ["quit", "exit", "退出"]:
+        print("对话结束")
+        return
+
+    if not user_input:
+        print("输入不能为空")
+        return
+
+    # 3) 构建 prompt
+    prompt = build_prompt("耐心的助理", user_input)
+    print(
+        f"----------<构建的Prompt>----------\n{prompt}\n----------<构建的Prompt>----------"
+    )
+
+    # 4) 调用大模型生成回复
+    try:
+        answer = llm.generate(
+            prompt, temperature=cfg.get("llm", {}).get("temperature")
+        )
+        print(f"助手: {answer}")
+
+        # 5) 保存对话历史到数据库
+        history_store.save_turn(session_id, turn_number, user_input, answer)
+        print(f"[第{turn_number}轮对话已保存]")
+
+    except Exception as e:
+        print(f"错误: {str(e)}")
+        return
+    print("----------<本轮对话结束>----------\n")
+    chat_loop(cfg, llm, history_store, session_id, turn_number)
+
+def chat_loop(cfg, llm, history_store, session_id, turn_number):
     while True:
         # 获取用户输入
         user_input = input("用户: ").strip()
@@ -50,7 +84,8 @@ def chat_loop(cfg, llm, history_store):
         turn_number += 1
 
         # 3) 构建 prompt
-        prompt = build_prompt("耐心的助理", user_input)
+        evidence = get_evidence(history_store, session_id)
+        prompt = build_prompt("耐心的助理", user_input, evidence)
         print(
             f"----------<构建的Prompt>----------\n{prompt}\n----------<构建的Prompt>----------"
         )
@@ -77,4 +112,4 @@ if __name__ == "__main__":
     cfg, llm, history_store = bootstrap()
 
     # 启动连续对话
-    chat_loop(cfg, llm, history_store)
+    chat_first_turn(cfg, llm, history_store)

@@ -1,5 +1,5 @@
 from typing import List
-
+from .history_store import HistoryStore
 
 def build_prompt(system_role: str,  query: str, evidence: str="") -> str:
     system = (
@@ -13,3 +13,7 @@ def build_prompt(system_role: str,  query: str, evidence: str="") -> str:
         f"{system}\n{task}\n{context}\n请基于上述证据回答，并在关键处标注[证据#x]。"
     )
     return prompt
+
+def get_evidence(history_store: HistoryStore, session_id: str, n_turns: int=5) -> str:
+    recent_history = history_store.get_recent_history(session_id, n_turns=n_turns)
+    return recent_history

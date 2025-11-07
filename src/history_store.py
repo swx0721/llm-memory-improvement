@@ -228,7 +228,7 @@ class HistoryStore:
 
         return results
 
-    def get_recent_history(self, session_id: str, n_turns: int = 3) -> str:
+    def get_recent_history(self, session_id: str, n_turns: int) -> str:
         """
         获取最近N轮对话的格式化字符串，用于构建上下文
 

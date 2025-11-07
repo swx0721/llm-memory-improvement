@@ -1,11 +1,7 @@
-"""
-查看对话历史记录的工具脚本
-"""
-
-from history_store import HistoryStore
+from .history_store import HistoryStore
 import yaml
 
-CFG_PATH = "config.yaml"
+CFG_PATH = "D:\\HP\\OneDrive\\Desktop\\学校\\课程\\专业课\\自然语言\\llm-memory-improvement\\config.yaml"
 
 
 def view_all_sessions():

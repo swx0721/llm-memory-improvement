@@ -1,9 +1,13 @@
 import requests
 import yaml
 
+CFG_PATH = r"D:\HP\OneDrive\Desktop\学校\课程\专业课\自然语言\llm-memory-improvement\config.yaml"
+
+
 class LLMClient:
     def generate(self, prompt: str, temperature: float = 0.2, **kwargs) -> str:
         raise NotImplementedError
+
 
 class ApiLLMClient(LLMClient):
 
@@ -13,7 +17,7 @@ class ApiLLMClient(LLMClient):
         base_url: str,
         model: str,
     ):
-        with open("config.yaml", "r", encoding="utf-8") as f:
+        with open(CFG_PATH, "r", encoding="utf-8") as f:
             config = yaml.safe_load(f)
         self.api_key = config.get("api_key", api_key)
         self.base_url = config.get("base_url", base_url)
@@ -37,7 +41,7 @@ class ApiLLMClient(LLMClient):
                 "n": kwargs.get("n", 1),
                 "response_format": kwargs.get("response_format", {"type": "text"}),
             }
-            
+
             headers = {
                 "Authorization": f"Bearer {self.api_key}",
                 "Content-Type": "application/json",
