@@ -2,7 +2,7 @@
 查看对话历史记录的工具脚本
 """
 
-from src.history_store import HistoryStore
+from history_store import HistoryStore
 import yaml
 
 CFG_PATH = "config.yaml"
